@@ -6,8 +6,19 @@ This repository contains coding problems used for the screening process in PFN (
 
 English and Japanese statements are available. The overview of the problems is as follows.
 
+## 2019
+The problem set in 2019 consists of six themes. Each applicant needed to choose one of them according to the theme they have chosen.
+
+- Machine Learning
+- Back-end
+- Front-end
+- Chip
+- Performance Optimization
+- Computer Vision (Chainer)
+
+
 ## 2018
-The problem set in 2018 consists of five themes. Applicants needed to choose one of them according to the theme they have chosen.
+The problem set in 2018 consists of five themes.
 
 - **Machine Learning/Mathematics**: You are asked to implement an algorithm of adversarial examples for some neural network model. You need to write a simple report on the performance of the algorithm as well.
 - **Back-end**: You are asked to create a tool that analyzes log files.
