@@ -6,6 +6,9 @@ This repository contains coding problems used for the screening process in PFN (
 
 English and Japanese statements are available. The overview of the problems is as follows.
 
+## 2020
+The problem in 2020 consists of "coding task" and "survey task".
+
 ## 2019
 The problem set in 2019 consists of six themes. Each applicant needed to choose one of them according to the theme they have chosen.
 
