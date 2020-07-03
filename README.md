@@ -6,6 +6,9 @@ This repository contains coding problems used for the screening process in PFN (
 
 English and Japanese statements are available. The overview of the problems is as follows.
 
+## 2020
+The problem in 2020 consists of "coding task" and "survey task".
+
 ## 2019
 The problem set in 2019 consists of six themes. Each applicant needed to choose one of them according to the theme they have chosen.
 
@@ -46,18 +49,10 @@ Only Japanese statements are available.
 * 2011(PFI): String processing. Palindrome.
 
 # We Are Hiring!
-If you got interested in PFN, we are looking forward to receiving your applications in the following internship programs.
-
-We are also hiring full-time employees in Tokyo, Japan and San Mateo, California. Please refer to the job page below.
-
-* [English job page](https://www.preferred-networks.jp/en/job)
-* [Japanese job page](https://www.preferred-networks.jp/ja/job)
+If you got interested in PFN, we are looking forward to receiving your applications in our internship programs.
 
 ### Reference for PFN internship
 
-- 2018 Summer Internship Program
- ([English](https://www.preferred-networks.jp/en/news/internship2018summer) /
- [Japanese](https://www.preferred-networks.jp/ja/news/internship2018summer_jp))
-- 2017 Summer Internship Program
- ([English](https://www.preferred-networks.jp/en/news/internship2017summer_en) /
- [Japanese](https://www.preferred-networks.jp/ja/news/internship2017summer_jp))
+- 2020 Summer Internship Program
+ ([English](https://preferred.jp/en/news/internship2020/) /
+ [Japanese](https://preferred.jp/ja/news/internship2020/))
