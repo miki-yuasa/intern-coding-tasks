@@ -2,15 +2,15 @@ from itertools import combinations
 import numpy as np
 import os
 
-
 def main():
     data = read_file()
 
-    #solution = map(count_matrices,data)
-    solution  = np.fromiter(map(count_matrices, data), dtype=np.int64).reshape((data.shape[0], 1))
+    solution  = np.fromiter(map(count_matrices, data), dtype=int).reshape((data.shape[0], 1))
+    
     output = np.hstack([data, solution])
     np.savetxt('q1_out.txt', output, fmt = '%.f', header = 'x y d solution' ) 
 
+    #print(count_matrices([-3,-4,-4]))
 
 def count_matrices(inputs)->int:
     # The basic strategy to tack;e this problem is to use the property
@@ -26,14 +26,14 @@ def count_matrices(inputs)->int:
     # Since the give matrix is always 3 by 3 and the elements are either x
     # or y, the possible combination of elements in a row is 2^3 = 8. For case 1
     # above, there are 8C3 = 56 combinations to examine. For case 2, the
-    # potential matrices are at least 8 * (8-1) *3 + 8 = 176.
+    # potential matrices are at least 8C2 *3 + 8 = 92.
 
     x = inputs[0]
     y = inputs[1]
     d = inputs[2]
 
     if d == 0:
-        i = 176 # at least (8 * (8-1)) * 3 + 8 = 176 when d = 0.
+        i = 92 # at least  8C2 *3 + 8 = 92 when d = 0.
 
     else:
         i = 0
@@ -45,7 +45,7 @@ def count_matrices(inputs)->int:
                                 [ y, y, x ],
                                 [ y, x, y ],
                                 [ x, y, y ],
-                                [ y, y, y]])
+                                [ y, y, y]], dtype = int)
     row_combinations = combinations(range(8),3) # 8C3 = 56 in total
 
     for combination in row_combinations:
@@ -53,9 +53,16 @@ def count_matrices(inputs)->int:
         b = possible_rows[combination[1]]
         c = possible_rows[combination[2]]
 
-        if d == np.linalg.det([a,b,c]):
+        det:int = np.round(np.linalg.det([a,b,c]), decimals = 8)
+        #det2:int = np.round(np.linalg.det([a,c,b]), decimals = 8)
+
+        #if det1 != -det2:
+        #    print(det1,det2)
+        #    break
+
+        if d == det:
             i += 1
-        elif d == np.linalg.det([a,c,b]):
+        elif d == -det:
             i += 1
         else:
             i += 0
