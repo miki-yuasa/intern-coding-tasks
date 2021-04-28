@@ -56,8 +56,8 @@ def count_matrices(inputs)->int:
         det:int = np.round(np.linalg.det([a,b,c]), decimals = 8)
         #det2:int = np.round(np.linalg.det([a,c,b]), decimals = 8)
 
-        #if det1 != -det2:
-        #    print(det1,det2)
+        #if det != -det2:
+        #    print(det,det2)
         #    break
 
         if d == det:
