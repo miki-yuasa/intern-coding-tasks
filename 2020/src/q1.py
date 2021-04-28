@@ -14,10 +14,36 @@ def count_matrices(x:int ,y:int ,d:int)->int:
     # above, there are 8C3 = 56 combinations to examine. For case 2, the
     # potential matrices are always 8 * (8-1) = 56.
 
-    import itertools
-
     if d == 0:
         return 56 # always 8 * (8-1) = 56
-    
+    else:
+        from itertools import combinations
+        import numpy as np
 
-print(count_matrices(1,2,0))
+        possible_rows = np.array([[ x, x, x ],
+                                  [ x, x, y ],
+                                  [ x, y, x ],
+                                  [ y, x, x ],
+                                  [ y, y, x ],
+                                  [ y, x, y ],
+                                  [ x, y, y ],
+                                  [ y, y, y]])
+        row_combinations = combinations(range(8),3)
+
+        i = 0
+
+        for combination in row_combinations:
+            a = possible_rows[combination[0]]
+            b = possible_rows[combination[1]]
+            c = possible_rows[combination[2]]
+            if d == np.linalg.det([a,b,c]):
+                i += 1
+            elif d == np.linalg.det([a,c,b]):
+                i += 1
+            else:
+                i += 0
+
+        return i*3
+  
+
+print(count_matrices(0,1,2))
