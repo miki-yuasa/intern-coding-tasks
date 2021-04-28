@@ -1,3 +1,10 @@
+def main():
+    x = 0
+    y = 1
+    d = 2
+
+    display_solution(x,y,d,count_matrices(x,y,d))
+
 def count_matrices(x:int, y:int, d:int)->int:
     # The basic strategy to tack;e this problem is to use the property
     # det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
@@ -15,7 +22,8 @@ def count_matrices(x:int, y:int, d:int)->int:
     # potential matrices are always 8 * (8-1) = 56.
 
     if d == 0:
-        return 56 # always 8 * (8-1) = 56
+        return 56 # always 8 * (8-1) = 56 when d = 0.
+
     else:
         from itertools import combinations
         import numpy as np
@@ -36,6 +44,7 @@ def count_matrices(x:int, y:int, d:int)->int:
             a = possible_rows[combination[0]]
             b = possible_rows[combination[1]]
             c = possible_rows[combination[2]]
+
             if d == np.linalg.det([a,b,c]):
                 i += 1
             elif d == np.linalg.det([a,c,b]):
@@ -50,8 +59,5 @@ def count_matrices(x:int, y:int, d:int)->int:
 def display_solution(x:int, y:int, d:int, solution:int):
     print('Input:(', x, ',', y, ',', d, '), Output:', solution, sep='')
 
-x = 0
-y = 1
-d = 2
-
-display_solution(x,y,d,count_matrices(x,y,d))
+if __name__ == '__main__':
+    main()
