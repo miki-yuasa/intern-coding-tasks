@@ -1,11 +1,18 @@
+from itertools import combinations
+import numpy as np
+import os
+
+
 def main():
-    x = 0
-    y = 1
-    d = 2
+    data = read_file()
 
-    display_solution(x,y,d,count_matrices(x,y,d))
+    #solution = map(count_matrices,data)
+    solution  = np.fromiter(map(count_matrices, data), dtype=np.int64).reshape((data.shape[0], 1))
+    output = np.hstack([data, solution])
+    np.savetxt('q1_out.txt', output, fmt = '%.f', header = 'x y d solution' ) 
 
-def count_matrices(x:int, y:int, d:int)->int:
+
+def count_matrices(inputs)->int:
     # The basic strategy to tack;e this problem is to use the property
     # det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
     # row vectors (i.e. scalar triple products). 
@@ -19,45 +26,50 @@ def count_matrices(x:int, y:int, d:int)->int:
     # Since the give matrix is always 3 by 3 and the elements are either x
     # or y, the possible combination of elements in a row is 2^3 = 8. For case 1
     # above, there are 8C3 = 56 combinations to examine. For case 2, the
-    # potential matrices are always 8 * (8-1) = 56.
+    # potential matrices are at least 8 * (8-1) *3 + 8 = 176.
+
+    x = inputs[0]
+    y = inputs[1]
+    d = inputs[2]
 
     if d == 0:
-        return 56 # always 8 * (8-1) = 56 when d = 0.
+        i = 176 # at least (8 * (8-1)) * 3 + 8 = 176 when d = 0.
 
     else:
-        from itertools import combinations
-        import numpy as np
-
-        possible_rows = np.array([[ x, x, x ],
-                                  [ x, x, y ],
-                                  [ x, y, x ],
-                                  [ y, x, x ],
-                                  [ y, y, x ],
-                                  [ y, x, y ],
-                                  [ x, y, y ],
-                                  [ y, y, y]])
-        row_combinations = combinations(range(8),3)
-
         i = 0
 
-        for combination in row_combinations:
-            a = possible_rows[combination[0]]
-            b = possible_rows[combination[1]]
-            c = possible_rows[combination[2]]
+    possible_rows = np.array([[ x, x, x ],
+                                [ x, x, y ],
+                                [ x, y, x ],
+                                [ y, x, x ],
+                                [ y, y, x ],
+                                [ y, x, y ],
+                                [ x, y, y ],
+                                [ y, y, y]])
+    row_combinations = combinations(range(8),3) # 8C3 = 56 in total
 
-            if d == np.linalg.det([a,b,c]):
-                i += 1
-            elif d == np.linalg.det([a,c,b]):
-                i += 1
-            else:
-                i += 0
+    for combination in row_combinations:
+        a = possible_rows[combination[0]]
+        b = possible_rows[combination[1]]
+        c = possible_rows[combination[2]]
 
-        # There are 3 possible combination of the rows based on the property
-        # of scalar triple products, so multiply by 3. 
-        return i*3 
+        if d == np.linalg.det([a,b,c]):
+            i += 1
+        elif d == np.linalg.det([a,c,b]):
+            i += 1
+        else:
+            i += 0
+
+    # There are 3 possible combination of the rows based on the property
+    # of scalar triple products, so multiply by 3. 
+    return i*3 
 
 def display_solution(x:int, y:int, d:int, solution:int):
     print('Input:(', x, ',', y, ',', d, '), Output:', solution, sep='')
+
+def read_file():
+    file =  os.getcwd() + '/q1_in.txt'
+    return np.loadtxt(file)
 
 if __name__ == '__main__':
     main()
