@@ -53,7 +53,7 @@ def count_matrices(inputs)->int:
         b = possible_rows[combination[1]]
         c = possible_rows[combination[2]]
 
-        det:int = np.round(np.linalg.det([a,b,c]), decimals = 8)
+        det:int = np.round(np.linalg.det([a,b,c]), decimals = 9)
         #det2:int = np.round(np.linalg.det([a,c,b]), decimals = 8)
 
         #if det != -det2:
