@@ -43,7 +43,15 @@ def count_matrices(x:int, y:int, d:int)->int:
             else:
                 i += 0
 
-        return i*3
-  
+        # There are 3 possible combination of the rows based on the property
+        # of scalar triple products, so multiply by 3. 
+        return i*3 
 
-print(count_matrices(0,1,2))
+def display_solution(x:int, y:int, d:int, solution:int):
+    print('Input:(', x, ',', y, ',', d, '), Output:', solution, sep='')
+
+x = 0
+y = 1
+d = 2
+
+display_solution(x,y,d,count_matrices(x,y,d))
