@@ -1,4 +1,4 @@
-def count_matrices(x:int ,y:int ,d:int)->int:
+def count_matrices(x:int, y:int, d:int)->int:
     # The basic strategy to tack;e this problem is to use the property
     # det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
     # row vectors (i.e. scalar triple products). 
