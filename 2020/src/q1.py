@@ -7,8 +7,7 @@ def main():
 
     solution  = np.fromiter(map(count_matrices, data), dtype=int).reshape((data.shape[0], 1))
     
-    output = np.hstack([data, solution])
-    np.savetxt('q1_out.txt', output, fmt = '%.f', header = 'x y d solution' ) 
+    np.savetxt('q1_out.txt', np.hstack([data, solution]), fmt = '%.f', header = 'x y d solution' ) 
 
     #print(count_matrices([-3,-4,-4]))
 
@@ -32,11 +31,7 @@ def count_matrices(inputs)->int:
     y = inputs[1]
     d = inputs[2]
 
-    if d == 0:
-        i = 92 # at least  8C2 *3 + 8 = 92 when d = 0.
-
-    else:
-        i = 0
+    i = 92 if d == 0 else 0 # Count matching matrices
 
     possible_rows = np.array([[ x, x, x ],
                                 [ x, x, y ],
@@ -53,7 +48,7 @@ def count_matrices(inputs)->int:
         b = possible_rows[combination[1]]
         c = possible_rows[combination[2]]
 
-        det:int = np.round(np.linalg.det([a,b,c]), decimals = 9)
+        det:int = np.round(np.linalg.det([a,b,c]), decimals = 9) # Loosen numerical errors
         #det2:int = np.round(np.linalg.det([a,c,b]), decimals = 8)
 
         #if det != -det2:
