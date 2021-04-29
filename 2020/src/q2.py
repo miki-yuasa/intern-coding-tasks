@@ -1,27 +1,28 @@
 import numpy as np
 
 def main():
-    #S_lengths = list_all_S_lengths(50)
-    #print(S_lengths)
-    S_chars(37)
+    S_lengths = list_all_S_lengths(50)
+    print(S_lengths)
+    print(len(S_lengths))
+    #S_chars(37)
 
 def count_abc(inputs,S_lengths):
     return 0
     
-"""
+
 def list_all_S_lengths(k_max):
-    """ """
-    The lengths of a S_k term is a Fibonacci nuber F_(k+1). Since the 
-    maximum value of k is give (k = 50), each iteration of solution
+    """ 
+    The lengths of a S_k term is a tribonacci nuber F_(k+1). Since the 
+    maximum value of k is given (k = 50), each iteration of solution
     has less overhead for each loop by calculating all the possible
     S lengths first. 
-    A Fibonacci number can be computed by rounding based on Binet's
-    formula approximated by the golden ratio phi = (1 + sqrt(5)) / 2:
-    F_n = floor(phi^n/sqrt(5) + 1/2) when n > 0.
-    """ """
-        k = np.arange(4,k_max+1)
-        return np.hstack([1, 1, 1, np.floor(1/np.sqrt(5)*((1+np.sqrt(5))/2)**k + 0.5)])
-"""
+    """ 
+    S_lengths = [1, 1, 1]
+    
+    for i in range(3,k_max):
+        S_lengths.append(S_lengths[i-1] + S_lengths[i-2] + S_lengths[i-3])
+
+    return S_lengths
 
 def rec(S3, S2, S1, k):
     if k <= 3: 
