@@ -1,37 +1,57 @@
 import numpy as np
 
 def main():
-    S_lengths = list_all_S_lengths(50)
-    print(S_lengths)
-    print(len(S_lengths))
-    #S_chars(37)
+    S_lengths, abc_counts = list_all_tribonacci_nums(50)
+    print(count_abc([5,2,3], S_lengths, abc_counts))
 
-def count_abc(inputs,S_lengths):
-    return 0
+def count_abc(kpq, S_lengths, abc_counts):
+    k,p,q = kpq
     
+    p_del = p - 1 # First p_del letters won't be counted
+    
+    abc_count = abc_counts[k - 1]
+    k_counter = k
 
-def list_all_S_lengths(k_max):
+    # Find the depth of searching tree first
+    for i in range(k - 3):
+        if k_counter <= 3:
+            break
+        elif p_del <=  S_lengths[k_counter - 4]:
+            k_counter -= 3
+        elif  S_lengths[k_counter - 4] < p_del or p_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
+            k_counter -= 2
+            abc_count -= abc_count[k_counter - 4]
+            p_del -= S_lengths[k_counter - 4]
+        else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+            k_counter -= 1
+            abc_count -= sum(abc_count[k_counter-4 : k_counter-2])
+            p_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+
+    abc_count -= [1, 0, 0] if p_del == 1 else [0, 1, 0] if p_del == 2 else [0, 1, 0] if p_del == 3 else 'Error'
+           
+    return abc_count       
+
+
+def list_all_tribonacci_nums(k_max):
     """ 
     The lengths of a S_k term is a tribonacci nuber F_(k+1). Since the 
     maximum value of k is given (k = 50), each iteration of solution
     has less overhead for each loop by calculating all the possible
-    S lengths first. 
+    S lengths first. Same for counts of a, b, and c for each S_k
+    k >= 4
     """ 
     S_lengths = [1, 1, 1]
-    
+    a_counts = [1, 0, 0]
+    b_counts = [0, 1, 0]
+    c_counts = [0, 0, 1]
+
     for i in range(3,k_max):
-        S_lengths.append(S_lengths[i-1] + S_lengths[i-2] + S_lengths[i-3])
+        S_lengths.append(sum(S_lengths[-3:]))
+        a_counts.append(sum(a_counts[-3:]))
+        b_counts.append(sum(b_counts[-3:]))
+        c_counts.append(sum(c_counts[-3:]))
 
-    return S_lengths
-
-def rec(S3, S2, S1, k):
-    if k <= 3: 
-        return S1
-    else:    
-        return rec(S2, S1, S3 + S2 + S1, k - 1)
-
-def S_chars(k):
-    return ['a', 'b', 'c'][k-1] if k <= 3 else rec('a', 'b', 'c', k)
+    return np.array(S_lengths), np.vstack([a_counts, b_counts, c_counts]).T
 
 if __name__ == '__main__':
     main()

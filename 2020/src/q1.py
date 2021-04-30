@@ -29,9 +29,7 @@ def count_matrices(inputs)->int:
     potential matrices are at least 8C2 *3 + 8 = 92.
     """
 
-    x = inputs[0]
-    y = inputs[1]
-    d = inputs[2]
+    x, y, d = inputs
 
     i = 92 if d == 0 else 0 # Count matching matrices
 
