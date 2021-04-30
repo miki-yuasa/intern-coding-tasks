@@ -2,7 +2,7 @@ import numpy as np
 
 def main():
     S_lengths, abc_counts = list_all_tribonacci_nums(50)
-    print(count_abc([5,2,3], S_lengths, abc_counts))
+    print(count_abc([50,1002,3000], S_lengths, abc_counts))
 
 def count_abc(kpq, S_lengths, abc_counts):
     k,p,q = kpq
@@ -20,14 +20,14 @@ def count_abc(kpq, S_lengths, abc_counts):
             k_counter -= 3
         elif  S_lengths[k_counter - 4] < p_del or p_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
             k_counter -= 2
-            abc_count -= abc_count[k_counter - 4]
+            abc_count -= abc_counts[k_counter - 4]
             p_del -= S_lengths[k_counter - 4]
         else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
             k_counter -= 1
-            abc_count -= sum(abc_count[k_counter-4 : k_counter-2])
+            abc_count -= sum(abc_counts[k_counter-4 : k_counter-2])
             p_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
 
-    abc_count -= [1, 0, 0] if p_del == 1 else [0, 1, 0] if p_del == 2 else [0, 1, 0] if p_del == 3 else 'Error'
+    abc_count -= [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
            
     return abc_count       
 

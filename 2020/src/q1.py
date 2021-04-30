@@ -1,17 +1,20 @@
 from itertools import combinations
+from functools import partial
 import numpy as np
 import os
 
 def main():
     data = read_file()
 
-    solution  = np.fromiter(map(count_matrices, data), dtype=int).reshape((data.shape[0], 1))
+
+    row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
+    solution  = np.fromiter(map(partial(count_matrices, row_combinations = row_combinations), data), dtype=int).reshape((data.shape[0], 1))
     
     np.savetxt('q1_out.txt', np.hstack([data, solution]), fmt = '%.f', header = 'x y d solution' ) 
 
     #print(count_matrices([-3,-4,-4]))
 
-def count_matrices(inputs)->int:
+def count_matrices(xyd, row_combinations)->int:
     """
     The basic strategy to tack;e this problem is to use the property
     det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
@@ -29,7 +32,7 @@ def count_matrices(inputs)->int:
     potential matrices are at least 8C2 *3 + 8 = 92.
     """
 
-    x, y, d = inputs
+    x, y, d = xyd
 
     i = 92 if d == 0 else 0 # Count matching matrices
 
@@ -41,26 +44,11 @@ def count_matrices(inputs)->int:
                                 [ y, x, y ],
                                 [ x, y, y ],
                                 [ y, y, y]], dtype = int)
-    row_combinations = combinations(range(8),3) # 8C3 = 56 in total
-
+    
     for combination in row_combinations:
-        a = possible_rows[combination[0]]
-        b = possible_rows[combination[1]]
-        c = possible_rows[combination[2]]
-
-        det:int = np.round(np.linalg.det([a,b,c]), decimals = 9) # Loosen numerical errors
-        """
-        det2:int = np.round(np.linalg.det([a,c,b]), decimals = 8)
-        if det != -det2:
-            print(det,det2)
-            break
-        """
-        if d == det:
-            i += 1
-        elif d == -det:
-            i += 1
-        else:
-            i += 0
+        i += 1 if np.isclose(np.abs(d), np.abs(np.linalg.det(possible_rows[combination,:]))) \
+             else 0
+    
     """
     There are 3 possible combination of the rows based on the property
     of scalar triple products, so multiply by 3. 
