@@ -1,6 +1,7 @@
 def main():
-    S_lengths, abc_counts = list_all_tribonacci_nums(50)
-    print(count_abc([50,1002,3000], S_lengths, abc_counts))
+    #S_lengths, abc_counts = list_all_tribos(50)
+    #print(count_abc([50,1002,3000], S_lengths, abc_counts))
+    print(list_all_tribos(50))
 
 def count_abc(kpq, S_lengths, abc_counts):
     k,p,q = kpq
@@ -30,7 +31,7 @@ def count_abc(kpq, S_lengths, abc_counts):
     return abc_count       
 
 
-def list_all_tribonacci_nums(k_max):
+def list_all_tribos(k_max):
     """ 
     The lengths of a S_k term is a tribonacci nuber F_(k+1). Since the 
     maximum value of k is given (k = 50), each iteration of solution
@@ -39,19 +40,29 @@ def list_all_tribonacci_nums(k_max):
     k >= 4
     """ 
     import numpy as np
+    from multiprocessing import Pool
 
-    S_lengths = [1, 1, 1]
-    a_counts = [1, 0, 0]
-    b_counts = [0, 1, 0]
-    c_counts = [0, 0, 1]
+    S_abc_with_k_max = [    (1, 1, 1, k_max),
+                            (1, 0, 0, k_max),
+                            (0, 1, 0, k_max),
+                            (0, 0, 1, k_max)    ]
+    
+    p = Pool(4)
+    result = p.map(list_tribo, S_abc_with_k_max)
 
-    for i in range(3,k_max):
-        S_lengths.append(sum(S_lengths[-3:]))
-        a_counts.append(sum(a_counts[-3:]))
-        b_counts.append(sum(b_counts[-3:]))
-        c_counts.append(sum(c_counts[-3:]))
+    return result
 
-    return np.array(S_lengths), np.vstack([a_counts, b_counts, c_counts]).T
+def list_tribo(list_k_max):
+    """
+    list_k_max: 1 x 4 list to start the Tribonacci sequence and k_max such that
+    [T1, T2, T3, k_max]
+    """
+    tribo_list, k_max = list(list_k_max[0:3]), list_k_max[3]
+
+    for _ in range(3,k_max):
+        tribo_list.append(sum(tribo_list[-3:]))
+
+    return tribo_list
 
 if __name__ == '__main__':
     main()
