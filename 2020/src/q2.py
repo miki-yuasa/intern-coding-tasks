@@ -1,5 +1,3 @@
-import numpy as np
-
 def main():
     S_lengths, abc_counts = list_all_tribonacci_nums(50)
     print(count_abc([50,1002,3000], S_lengths, abc_counts))
@@ -40,6 +38,8 @@ def list_all_tribonacci_nums(k_max):
     S lengths first. Same for counts of a, b, and c for each S_k
     k >= 4
     """ 
+    import numpy as np
+
     S_lengths = [1, 1, 1]
     a_counts = [1, 0, 0]
     b_counts = [0, 1, 0]

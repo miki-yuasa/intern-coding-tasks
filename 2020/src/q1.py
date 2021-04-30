@@ -1,12 +1,9 @@
-from itertools import combinations
-from functools import partial
-import numpy as np
-import os
-
 def main():
+    from itertools import combinations
+    from functools import partial
+    import numpy as np
+    
     data = read_file()
-
-
     row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
     solution  = np.fromiter(map(partial(count_matrices, row_combinations = row_combinations), data), dtype=int).reshape((data.shape[0], 1))
     
@@ -31,6 +28,8 @@ def count_matrices(xyd, row_combinations)->int:
     above, there are 8C3 = 56 combinations to examine. For case 2, the
     potential matrices are at least 8C2 *3 + 8 = 92.
     """
+
+    import numpy as np
 
     x, y, d = xyd
 
@@ -59,6 +58,9 @@ def display_solution(x:int, y:int, d:int, solution:int):
     print('Input:(', x, ',', y, ',', d, '), Output:', solution, sep='')
 
 def read_file():
+    import os
+    import numpy as np
+
     file =  os.getcwd() + '/q1_in.txt'
     return np.loadtxt(file)
 
