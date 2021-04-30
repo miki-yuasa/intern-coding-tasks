@@ -1,7 +1,7 @@
 def main():
-    #S_lengths, abc_counts = list_all_tribos(50)
-    #print(count_abc([50,1002,3000], S_lengths, abc_counts))
-    print(list_all_tribos(50))
+    S_lengths, abc_counts = list_all_tribos(50)
+    print(count_abc([50,1002,3000], S_lengths, abc_counts))
+    #print(list_all_tribos(50))
 
 def count_abc(kpq, S_lengths, abc_counts):
     k,p,q = kpq
@@ -50,7 +50,7 @@ def list_all_tribos(k_max):
     p = Pool(4)
     result = p.map(list_tribo, S_abc_with_k_max)
 
-    return result
+    return result[0], np.vstack(result[0:3]).T
 
 def list_tribo(list_k_max):
     """

@@ -54,9 +54,6 @@ def count_matrices(xyd, row_combinations)->int:
     """
     return i*3 
 
-def display_solution(x:int, y:int, d:int, solution:int):
-    print('Input:(', x, ',', y, ',', d, '), Output:', solution, sep='')
-
 def read_file():
     import os
     import numpy as np
