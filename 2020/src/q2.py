@@ -1,94 +1,104 @@
+import cProfile
+
 def main():
+    from os import cpu_count
     from sys import stdin
     from multiprocessing import Pool   
+    from functools import partial
+
 
     stdin = open('q2_in.txt')
     data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
-    print(data)
+    
+    S_lengths, abc_counts = list_all_tribos(50)
 
+    p = Pool(cpu_count() - 1)
+    solutions = p.map(partial(count_abc,S_lengths=S_lengths,abc_counts=abc_counts),data)
+    #solutions = count_abc([5,2,3], S_lengths, abc_counts)
+    print(solutions)
 
-    #S_lengths, abc_counts = list_all_tribos(50)
     #print(count_abc([50,1002,3000], S_lengths, abc_counts))
-    #print(list_all_tribos(50)) 
 
 def count_abc(kpq, S_lengths, abc_counts):
-    from multiprocessing import Pool   
-    from functools import partial
 
     k,p,q = kpq
     abc_count = abc_counts[k - 1]
 
-    pool = Pool(2)
-    abc_subtrahends = pool.map(partial(sum_subtrahends, k = k, S_lengths = S_lengths, abc_counts = abc_counts),[(p,True),(q,False)])
+    return (abc_count - p_subtrahends(p, k, S_lengths, abc_counts) - q_subtrahends(q, k, S_lengths, abc_counts)).tolist()
 
-    return abc_count - sum(abc_subtrahends) #abc_count   
 
 def sum_subtrahends(pos_pq, k, S_lengths, abc_counts):
     import numpy as np
 
-    pos_del:int = pos_pq[0] - 1 # First p_del letters won't be counted
+    pos:int = pos_pq[0] - 1 # First p_del letters won't be counted
     is_p:bool = pos_pq[1]
    
     if is_p:
-        abc_subtrahend = p_subtrahends(pos_del, k, S_lengths, abc_counts)
+        abc_subtrahend = p_subtrahends(pos, k, S_lengths, abc_counts)
     else:
-        abc_subtrahend = q_subtrahends(pos_del, k, S_lengths, abc_counts)
+        abc_subtrahend = q_subtrahends(pos, k, S_lengths, abc_counts)
 
     return abc_subtrahend
 
-def p_subtrahends(pos_del, k, S_lengths, abc_counts):
+def p_subtrahends(pos, k, S_lengths, abc_counts):
     import numpy as np
-
-    k_counter = k
+    
     abc_subtrahend = np.zeros(3)
 
-    # Find the depth of searching tree first
-    for _ in range(k - 3):
-        if k_counter <= 3:
-            break
+    if pos == 1:
+        return abc_subtrahend
+    else:
+        pos_del = pos -1 
+        k_counter = k
+        for _ in range(k - 2):
+            if k_counter <= 3:
+                break
 
-        elif pos_del <=  S_lengths[k_counter - 4]:
-            k_counter -= 3
+            elif pos_del <=  S_lengths[k_counter - 4]:
+                k_counter -= 3
 
-        elif  S_lengths[k_counter - 4] < pos_del or pos_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
-            k_counter -= 2
-            pos_del -= S_lengths[k_counter - 4]
-            abc_subtrahend += abc_counts[k_counter - 4]
+            elif  S_lengths[k_counter - 4] < pos_del and pos_del <=  sum(S_lengths[k_counter-4 : k_counter-2]):
+                pos_del -= S_lengths[k_counter - 4]
+                abc_subtrahend += abc_counts[k_counter - 4]
+                k_counter -= 2
 
-        else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
-            k_counter -= 1
-            pos_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
-            abc_subtrahend += sum(abc_counts[k_counter-4 : k_counter-2])
+            else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+                pos_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+                abc_subtrahend += sum(abc_counts[k_counter-4 : k_counter-2])
+                k_counter -= 1
 
-    abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
-    return abc_subtrahend
+        abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
+        return abc_subtrahend
 
-def q_subtrahends(pos_del, k, S_lengths, abc_counts):
+def q_subtrahends(pos, k, S_lengths, abc_counts):
     import numpy as np
 
-    k_counter = k
     abc_subtrahend = np.zeros(3)
 
-    # Find the depth of searching tree first
-    for _ in range(k - 3):
-        if k_counter <= 3:
-            break
+    if pos == S_lengths[k - 1]:
+        return abc_subtrahend
+    else:
+        pos_del = pos + 1 
+        k_counter = k
+        for _ in range(k - 3):
+            if k_counter <= 3:
+                break
 
-        elif pos_del <=  S_lengths[k_counter - 4]:
-            k_counter -= 3
-            pos_del -=  sum(S_lengths[k_counter-3 : k_counter-1])
-            abc_subtrahend += sum(abc_counts[k_counter-3 : k_counter-1])
+            elif pos_del <=  S_lengths[k_counter - 4]:
+                abc_subtrahend += sum(abc_counts[k_counter-3 : k_counter-1])
+                k_counter -= 3
 
-        elif  S_lengths[k_counter - 4] < pos_del or pos_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
-            k_counter -= 2
-            pos_del -= S_lengths[k_counter - 2]
-            abc_subtrahend += abc_counts[k_counter - 2]
+            elif  S_lengths[k_counter - 4] < pos_del and pos_del <=  sum(S_lengths[k_counter-4 : k_counter-2]):
+                pos_del -= S_lengths[k_counter - 2]
+                abc_subtrahend += abc_counts[k_counter - 2]
+                k_counter -= 2
 
-        else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
-            k_counter -= 1
+            else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+                pos_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+                k_counter -= 1
 
-    abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
-    return abc_subtrahend
+        abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
+        return abc_subtrahend
 
 def list_all_tribos(k_max):
     """ 
@@ -109,7 +119,7 @@ def list_all_tribos(k_max):
     p = Pool(4)
     result = p.map(list_tribo, S_abc_with_k_max)
 
-    return result[0], np.vstack(result[0:3]).T
+    return result[0], np.vstack(result[1:4]).T
 
 def list_tribo(list_k_max):
     """

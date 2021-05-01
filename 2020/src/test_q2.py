@@ -14,11 +14,7 @@ class TestQ2(unittest.TestCase):
         self.assertEqual(50,len(q2.list_all_tribos(50)[0]))
         self.assertEqual(True,np.allclose(q2.list_all_tribos(5)[1],np.array([[1,0,0,1,1],[0,1,0,1,2],[0,0,1,1,2]])))
 
-    def test_S_chars(self):
-        self.assertEqual('a',q2.S_chars(1))
-        self.assertEqual('b',q2.S_chars(2))
-        self.assertEqual('c',q2.S_chars(3))
-        self.assertEqual('abc',q2.S_chars(4))
-        self.assertEqual('bcabc',q2.S_chars(5))
-
+    def test_count_abc(self):
+        S_lengths, abc_counts = q2.list_all_tribos(50)
+        self.assertEqual(True,np.allclose([1,0,1],q2.count_abc([5,2,3], S_lengths, abc_counts)))
 
