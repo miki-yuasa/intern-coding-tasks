@@ -4,32 +4,83 @@ def main():
     #print(list_all_tribos(50))
 
 def count_abc(kpq, S_lengths, abc_counts):
+    from multiprocessing import Pool   
+    from functools import partial
+
     k,p,q = kpq
-    
-    p_del = p - 1 # First p_del letters won't be counted
-    
     abc_count = abc_counts[k - 1]
+
+    pool = Pool(2)
+    abc_subtrahends = pool.map(partial(sum_subtrahends, k = k, S_lengths = S_lengths, abc_counts = abc_counts),[(p,True),(q,False)])
+
+    return abc_count - sum(abc_subtrahends) #abc_count   
+
+def sum_subtrahends(pos_pq, k, S_lengths, abc_counts):
+    import numpy as np
+
+    pos_del:int = pos_pq[0] - 1 # First p_del letters won't be counted
+    is_p:bool = pos_pq[1]
+   
+    if is_p:
+        abc_subtrahend = p_subtrahends(pos_del, k, S_lengths, abc_counts)
+    else:
+        abc_subtrahend = q_subtrahends(pos_del, k, S_lengths, abc_counts)
+
+    return abc_subtrahend
+
+def p_subtrahends(pos_del, k, S_lengths, abc_counts):
+    import numpy as np
+
     k_counter = k
+    abc_subtrahend = np.zeros(3)
 
     # Find the depth of searching tree first
-    for i in range(k - 3):
+    for _ in range(k - 3):
         if k_counter <= 3:
             break
-        elif p_del <=  S_lengths[k_counter - 4]:
+
+        elif pos_del <=  S_lengths[k_counter - 4]:
             k_counter -= 3
-        elif  S_lengths[k_counter - 4] < p_del or p_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
+
+        elif  S_lengths[k_counter - 4] < pos_del or pos_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
             k_counter -= 2
-            abc_count -= abc_counts[k_counter - 4]
-            p_del -= S_lengths[k_counter - 4]
+            pos_del -= S_lengths[k_counter - 4]
+            abc_subtrahend += abc_counts[k_counter - 4]
+
         else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
             k_counter -= 1
-            abc_count -= sum(abc_counts[k_counter-4 : k_counter-2])
-            p_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+            pos_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+            abc_subtrahend += sum(abc_counts[k_counter-4 : k_counter-2])
 
-    abc_count -= [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
-           
-    return abc_count       
+    abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
+    return abc_subtrahend
 
+def q_subtrahends(pos_del, k, S_lengths, abc_counts):
+    import numpy as np
+
+    k_counter = k
+    abc_subtrahend = np.zeros(3)
+
+    # Find the depth of searching tree first
+    for _ in range(k - 3):
+        if k_counter <= 3:
+            break
+
+        elif pos_del <=  S_lengths[k_counter - 4]:
+            k_counter -= 3
+            pos_del -=  sum(S_lengths[k_counter-3 : k_counter-1])
+            abc_subtrahend += sum(abc_counts[k_counter-3 : k_counter-1])
+
+        elif  S_lengths[k_counter - 4] < pos_del or pos_del <=  sum(S_lengths[k_counter-4 : k_counter-3]):
+            k_counter -= 2
+            pos_del -= S_lengths[k_counter - 2]
+            abc_subtrahend += abc_counts[k_counter - 2]
+
+        else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+            k_counter -= 1
+
+    abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 1, 0] if k_counter == 3 else 'Error'
+    return abc_subtrahend
 
 def list_all_tribos(k_max):
     """ 
