@@ -6,7 +6,6 @@ def main():
     from multiprocessing import Pool   
     from functools import partial
 
-
     stdin = open('q2_in.txt')
     data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
     
@@ -14,17 +13,18 @@ def main():
 
     p = Pool(cpu_count() - 1)
     solutions = p.map(partial(count_abc,S_lengths=S_lengths,abc_counts=abc_counts),data)
-    #solutions = count_abc([5,2,3], S_lengths, abc_counts)
-    print(solutions)
 
-    #print(count_abc([50,1002,3000], S_lengths, abc_counts))
+    with open("q2_out.txt", "w", encoding = "utf_8") as file:
+        file.writelines(solutions)
 
 def count_abc(kpq, S_lengths, abc_counts):
 
     k,p,q = kpq
     abc_count = abc_counts[k - 1]
 
-    return (abc_count - p_subtrahends(p, k, S_lengths, abc_counts) - q_subtrahends(q, k, S_lengths, abc_counts)).tolist()
+    abc = (abc_count - p_subtrahends(p, k, S_lengths, abc_counts) - q_subtrahends(q, k, S_lengths, abc_counts)).tolist()
+
+    return 'a:{:.0f},b:{:.0f},c:{:.0f}\n'.format(*abc)
 
 
 def sum_subtrahends(pos_pq, k, S_lengths, abc_counts):
