@@ -1,7 +1,15 @@
 def main():
-    S_lengths, abc_counts = list_all_tribos(50)
-    print(count_abc([50,1002,3000], S_lengths, abc_counts))
-    #print(list_all_tribos(50))
+    from sys import stdin
+    from multiprocessing import Pool   
+
+    stdin = open('q2_in.txt')
+    data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
+    print(data)
+
+
+    #S_lengths, abc_counts = list_all_tribos(50)
+    #print(count_abc([50,1002,3000], S_lengths, abc_counts))
+    #print(list_all_tribos(50)) 
 
 def count_abc(kpq, S_lengths, abc_counts):
     from multiprocessing import Pool   

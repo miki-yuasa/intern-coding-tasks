@@ -1,11 +1,14 @@
 def main():
     from itertools import combinations
     from functools import partial
+    from sys import stdin
     import numpy as np
     
-    data = read_file()
+    stdin = open('q1_in.txt')
+    data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
+
     row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
-    solution  = np.fromiter(map(partial(count_matrices, row_combinations = row_combinations), data), dtype=int).reshape((data.shape[0], 1))
+    solution  = np.fromiter(map(partial(count_matrices, row_combinations = row_combinations), data), dtype=int)
     
     np.savetxt('q1_out.txt', np.hstack([data, solution]), fmt = '%.f', header = 'x y d solution' ) 
 
