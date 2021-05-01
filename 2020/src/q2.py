@@ -6,8 +6,8 @@ def main():
     from multiprocessing import Pool   
     from functools import partial
 
-    stdin = open('q2_in.txt')
-    data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
+    with open('q2_in.txt') as stdin:
+        data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
     
     S_lengths, abc_counts = list_all_tribos(50)
 

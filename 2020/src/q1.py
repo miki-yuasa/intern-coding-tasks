@@ -1,18 +1,20 @@
 def main():
-    from itertools import combinations
-    from functools import partial
+    from os import cpu_count
     from sys import stdin
-    import numpy as np
+    from multiprocessing import Pool   
+    from functools import partial
+    from itertools import combinations 
     
-    stdin = open('q1_in.txt')
-    data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
+    with open('q1_in.txt') as stdin:
+        data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
 
     row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
-    solution  = np.fromiter(map(partial(count_matrices, row_combinations = row_combinations), data), dtype=int)
-    
-    np.savetxt('q1_out.txt', np.hstack([data, solution]), fmt = '%.f', header = 'x y d solution' ) 
 
-    #print(count_matrices([-3,-4,-4]))
+    p = Pool(cpu_count() - 1)
+
+    solutions = p.map(partial(count_matrices, row_combinations = row_combinations),data)
+    with open("q1_out.txt", "w", encoding = "utf_8") as file:
+        file.writelines(solutions)
 
 def count_matrices(xyd, row_combinations)->int:
     """
@@ -45,7 +47,7 @@ def count_matrices(xyd, row_combinations)->int:
                                 [ y, y, x ],
                                 [ y, x, y ],
                                 [ x, y, y ],
-                                [ y, y, y]], dtype = int)
+                                [ y, y, y]])
     
     for combination in row_combinations:
         i += 1 if np.isclose(np.abs(d), np.abs(np.linalg.det(possible_rows[combination,:]))) \
@@ -55,14 +57,7 @@ def count_matrices(xyd, row_combinations)->int:
     There are 3 possible combination of the rows based on the property
     of scalar triple products, so multiply by 3. 
     """
-    return i*3 
-
-def read_file():
-    import os
-    import numpy as np
-
-    file =  os.getcwd() + '/q1_in.txt'
-    return np.loadtxt(file)
+    return '{:.0f}\n'.format(i*3) 
 
 if __name__ == '__main__':
     main()
