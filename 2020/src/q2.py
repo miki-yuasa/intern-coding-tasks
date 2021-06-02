@@ -82,11 +82,10 @@ def q_subtrahends(q, k, S_lengths, abc_counts):
                 abc_subtrahend += abc_counts[k_counter - 2]
                 k_counter -= 2
 
-            else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+            else:
                 q_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
                 k_counter -= 1
 
-        #abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
         return abc_subtrahend
 
 def list_all_tribos(k_max: int)-> Tuple[List[int], List[List[int]]]:
