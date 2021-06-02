@@ -10,7 +10,7 @@ def main():
 
     row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
 
-    p = Pool(cpu_count() - 1)
+    p = Pool(cpu_count())
 
     solutions = p.map(partial(count_matrices, row_combinations = row_combinations),data)
     with open("q1_out.txt", "w", encoding = "utf_8") as file:
@@ -50,7 +50,7 @@ def count_matrices(xyd, row_combinations)->int:
                                 [ y, y, y]])
     
     for combination in row_combinations:
-        i += 1 if np.isclose(np.abs(d), np.abs(np.linalg.det(possible_rows[combination,:]))) \
+        i += 1 if np.isclose(abs(d), abs(np.linalg.det(possible_rows[combination,:]))) \
              else 0
     
     """
