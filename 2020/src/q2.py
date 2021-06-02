@@ -51,7 +51,7 @@ def p_subtrahends(p: int, k: int, S_lengths: List[int], abc_counts: List[int]):
                 abc_subtrahend += abc_counts[k_counter - 4]
                 k_counter -= 2
 
-            else: #sum(S_lengths[k-4 : k-3]) <  p_del or p_del <=  S_lengths[k - 1]:
+            else:
                 p_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
                 abc_subtrahend += sum(abc_counts[k_counter-4 : k_counter-2])
                 k_counter -= 1
