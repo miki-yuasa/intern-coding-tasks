@@ -67,7 +67,7 @@ def q_subtrahends(q, k, S_lengths, abc_counts):
     if q == S_lengths[k - 1]:
         return abc_subtrahend
     else:
-        q_del = q + 1 
+        q_del = q  
         k_counter = k
         for _ in range(k - 3):
             if k_counter <= 3:
@@ -78,7 +78,7 @@ def q_subtrahends(q, k, S_lengths, abc_counts):
                 k_counter -= 3
 
             elif  S_lengths[k_counter - 4] < q_del and q_del <=  sum(S_lengths[k_counter-4 : k_counter-2]):
-                q_del -= S_lengths[k_counter - 2]
+                q_del -= S_lengths[k_counter - 4]
                 abc_subtrahend += abc_counts[k_counter - 2]
                 k_counter -= 2
 
@@ -86,7 +86,7 @@ def q_subtrahends(q, k, S_lengths, abc_counts):
                 q_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
                 k_counter -= 1
 
-        abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
+        #abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
         return abc_subtrahend
 
 def list_all_tribos(k_max: int)-> Tuple[List[int], List[List[int]]]:
