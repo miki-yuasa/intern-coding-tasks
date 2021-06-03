@@ -29,7 +29,7 @@ def count_abc(kpq: List[int], S_lengths: List[int], abc_counts: List[List[int]])
 
     return 'a:{:.0f},b:{:.0f},c:{:.0f}\n'.format(*abc)
 
-def p_subtrahends(p: int, k: int, S_lengths: List[int], abc_counts: List[int]):
+def p_subtrahends(p: int, k: int, S_lengths: List[int], abc_counts: List[List[int]]) -> List[int]:
     import numpy as np
     
     abc_subtrahend:np.ndarray = np.zeros(3)
@@ -37,29 +37,27 @@ def p_subtrahends(p: int, k: int, S_lengths: List[int], abc_counts: List[int]):
     if p == 1:
         return abc_subtrahend
     else:
-        p_del = p -1 
         k_counter = k
         for _ in range(k - 2):
             if k_counter <= 3:
                 break
 
-            elif p_del <=  S_lengths[k_counter - 4]:
+            elif p <=  S_lengths[k_counter - 4]:
                 k_counter -= 3
 
-            elif  S_lengths[k_counter - 4] < p_del and p_del <=  sum(S_lengths[k_counter-4 : k_counter-2]):
-                p_del -= S_lengths[k_counter - 4]
+            elif  S_lengths[k_counter - 4] < p and p <=  sum(S_lengths[k_counter-4 : k_counter-2]):
+                p -= S_lengths[k_counter - 4]
                 abc_subtrahend += abc_counts[k_counter - 4]
                 k_counter -= 2
 
             else:
-                p_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+                p -=  sum(S_lengths[k_counter-4 : k_counter-2])
                 abc_subtrahend += sum(abc_counts[k_counter-4 : k_counter-2])
                 k_counter -= 1
 
-        abc_subtrahend += [1, 0, 0] if k_counter == 1 else [0, 1, 0] if k_counter == 2 else [0, 0, 1] if k_counter == 3 else 'Error'
         return abc_subtrahend
 
-def q_subtrahends(q, k, S_lengths, abc_counts):
+def q_subtrahends(q:int, k:int, S_lengths:List[int], abc_counts:List[List[int]]) -> List[int]:
     import numpy as np
 
     abc_subtrahend = np.zeros(3)
@@ -67,23 +65,22 @@ def q_subtrahends(q, k, S_lengths, abc_counts):
     if q == S_lengths[k - 1]:
         return abc_subtrahend
     else:
-        q_del = q  
         k_counter = k
         for _ in range(k - 3):
             if k_counter <= 3:
                 break
 
-            elif q_del <=  S_lengths[k_counter - 4]:
+            elif q <=  S_lengths[k_counter - 4]:
                 abc_subtrahend += sum(abc_counts[k_counter-3 : k_counter-1])
                 k_counter -= 3
 
-            elif  S_lengths[k_counter - 4] < q_del and q_del <=  sum(S_lengths[k_counter-4 : k_counter-2]):
-                q_del -= S_lengths[k_counter - 4]
+            elif  S_lengths[k_counter - 4] < q and q <=  sum(S_lengths[k_counter-4 : k_counter-2]):
+                q -= S_lengths[k_counter - 4]
                 abc_subtrahend += abc_counts[k_counter - 2]
                 k_counter -= 2
 
             else:
-                q_del -=  sum(S_lengths[k_counter-4 : k_counter-2])
+                q -=  sum(S_lengths[k_counter-4 : k_counter-2])
                 k_counter -= 1
 
         return abc_subtrahend
