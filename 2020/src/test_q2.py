@@ -1,4 +1,4 @@
-# Test case for Question 2
+# Test cases for Question 2
 
 import unittest
 import numpy as np
@@ -15,7 +15,7 @@ class TestQ2(unittest.TestCase):
     def test_count_abc(self):
         S_lengths, abc_counts = q2.list_all_tribos(50)
         
-        self.assertEqual('a:{:.0f},b:{:.0f},c:{:.0f}\n'.format(*[1,0,1]), q2.count_abc([5,2,3], S_lengths, abc_counts))
+        self.assertEqual('a:{:.0f},b:{:.0f},c{:.0f}\n'.format(*[1,0,1]), q2.count_abc([5,2,3], S_lengths, abc_counts))
 
     def test_subtrahends(self):
         test_patterns = [

@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 def main():
     from os import cpu_count
     from sys import stdin
@@ -16,7 +18,7 @@ def main():
     with open("q1_out.txt", "w", encoding = "utf_8") as file:
         file.writelines(solutions)
 
-def count_matrices(xyd, row_combinations)->int:
+def count_matrices(xyd: List[int], row_combinations: List[List[int]])->str:
     """
     The basic strategy to tack;e this problem is to use the property
     det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
