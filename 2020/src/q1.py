@@ -1,5 +1,8 @@
+from __future__ import annotations
 from typing import List, Tuple
+from functools import lru_cache
 
+@lru_cache
 def main():
     from os import cpu_count
     from sys import stdin
@@ -8,9 +11,9 @@ def main():
     from itertools import combinations 
     
     with open('q1_in.txt') as stdin:
-        data = [list(map(int,line.rstrip().split())) for line in stdin.readlines()]
+        data = [tuple(map(int,line.rstrip().split())) for line in stdin.readlines()]
 
-    row_combinations = list(combinations(range(8),3)) # 8C3 = 56 in total
+    row_combinations = tuple(combinations(range(8),3)) # 8C3 = 56 in total
 
     p = Pool(cpu_count())
 
@@ -18,7 +21,8 @@ def main():
     with open("q1_out.txt", "w", encoding = "utf_8") as file:
         file.writelines(solutions)
 
-def count_matrices(xyd: List[int], row_combinations: List[List[int]])->str:
+@lru_cache
+def count_matrices(xyd: Tuple[int], row_combinations: Tuple[List[int]])->str:
     """
     The basic strategy to tack;e this problem is to use the property
     det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
