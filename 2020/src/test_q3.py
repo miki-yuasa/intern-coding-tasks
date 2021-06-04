@@ -15,7 +15,7 @@ class TestQ3(unittest.TestCase):
             (6,3,13),
             (6,4,8),
             (6,5,9),
-            (6,6,8)
+            (6,6,8),
         ]
 
         for n, a_1, expected_result in test_patterns:

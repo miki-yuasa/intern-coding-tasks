@@ -8,7 +8,6 @@ def main():
     from os import cpu_count
     from sys import stdin
     from multiprocessing import Pool   
-    from functools import partial
 
     with open('q3_in.txt') as stdin:
         data = [tuple(map(int,line.rstrip().split())) for line in stdin.readlines()]
@@ -27,15 +26,16 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
     a_1:int
     n, a_1 = na_1
 
-    seat_sum: int = 0
     seat_pairs: List[Tuple] = initialize_seat_heap(n,a_1)
+
+    sitting_order: List[int] = []
 
     for i in range(n-1):
         farthest_seat_pair = heappop(seat_pairs)
-        new_seat_ind:int
-
         left_seat: int = farthest_seat_pair[1][0]
         right_seat: int = farthest_seat_pair[1][1]
+
+        new_seat_ind:int
 
         if left_seat <= 0:
             new_seat_ind = 1
@@ -50,12 +50,9 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
             heappush(seat_pairs, get_seat_pair(left_seat, new_seat_ind))
             heappush(seat_pairs, get_seat_pair(new_seat_ind, right_seat))
 
-        if i % 2 == 0:
-            seat_sum += new_seat_ind
-        else:
-            pass
+        sitting_order.append(new_seat_ind)
     
-    return '{:.0f}\n'.format(seat_sum)
+    return '{:.0f}\n'.format(sum(sitting_order[::2]))
 
 @lru_cache
 def initialize_seat_heap(n:int, a_1:int) -> List[Tuple]:
@@ -68,9 +65,8 @@ def initialize_seat_heap(n:int, a_1:int) -> List[Tuple]:
 
 @lru_cache
 def get_seat_pair(left_seat: int, right_seat: int) -> Tuple:
-    from math import ceil 
 
-    return (ceil((left_seat - right_seat)/2), [left_seat, right_seat], left_seat - right_seat)
+    return (-((right_seat - left_seat)//2), [left_seat, right_seat])
 
 
 if __name__ == '__main__':
