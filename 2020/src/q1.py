@@ -1,28 +1,33 @@
 from __future__ import annotations
 from typing import List, Tuple
 from functools import lru_cache
+from os import cpu_count
+from sys import stdin
+from multiprocessing import Pool
+from functools import partial
+from itertools import combinations
+import numpy as np
+
 
 @lru_cache
 def main():
-    from os import cpu_count
-    from sys import stdin
-    from multiprocessing import Pool   
-    from functools import partial
-    from itertools import combinations 
-    
-    with open('q1_in.txt') as stdin:
-        data = [tuple(map(int,line.rstrip().split())) for line in stdin.readlines()]
 
-    row_combinations = tuple(combinations(range(8),3)) # 8C3 = 56 in total
+    with open('q1_in.txt') as stdin:
+        data = [tuple(map(int, line.rstrip().split()))
+                for line in stdin.readlines()]
+
+    row_combinations = tuple(combinations(range(8), 3))  # 8C3 = 56 in total
 
     p = Pool(cpu_count())
 
-    solutions = p.map(partial(count_matrices, row_combinations = row_combinations),data)
-    with open("q1_out.txt", "w", encoding = "utf_8") as file:
+    solutions = p.map(
+        partial(count_matrices, row_combinations=row_combinations), data)
+    with open("q1_out.txt", "w", encoding="utf_8") as file:
         file.writelines(solutions)
 
+
 @lru_cache
-def count_matrices(xyd: Tuple[int], row_combinations: Tuple[List[int]])->str:
+def count_matrices(xyd: Tuple[int], row_combinations: Tuple[List[int]]) -> str:
     """
     The basic strategy to tack;e this problem is to use the property
     det|(a,b,c)'| = a (b x c) = b (c x a) = c (a x b) where a, b, and c are
@@ -40,30 +45,29 @@ def count_matrices(xyd: Tuple[int], row_combinations: Tuple[List[int]])->str:
     potential matrices are at least 8C2 *3 + 8 = 92.
     """
 
-    import numpy as np
-
     x, y, d = xyd
 
-    i = 92 if d == 0 else 0 # Count matching matrices
+    i = 92 if d == 0 else 0  # Count matching matrices
 
-    possible_rows = np.array([[ x, x, x ],
-                                [ x, x, y ],
-                                [ x, y, x ],
-                                [ y, x, x ],
-                                [ y, y, x ],
-                                [ y, x, y ],
-                                [ x, y, y ],
-                                [ y, y, y]])
-    
+    possible_rows = np.array([[x, x, x],
+                              [x, x, y],
+                              [x, y, x],
+                              [y, x, x],
+                              [y, y, x],
+                              [y, x, y],
+                              [x, y, y],
+                              [y, y, y]])
+
     for combination in row_combinations:
-        i += 1 if np.isclose(abs(d), abs(np.linalg.det(possible_rows[combination,:]))) \
-             else 0
-    
+        i += 1 if np.isclose(abs(d), abs(np.linalg.det(possible_rows[combination, :]))) \
+            else 0
+
     """
     There are 3 possible combination of the rows based on the property
     of scalar triple products, so multiply by 3. 
     """
-    return '{:.0f}\n'.format(i*3) 
+    return '{:.0f}\n'.format(i*3)
+
 
 if __name__ == '__main__':
     main()
