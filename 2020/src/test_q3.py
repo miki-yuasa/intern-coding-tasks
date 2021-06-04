@@ -10,7 +10,12 @@ class TestQ3(unittest.TestCase):
     def test_get_seat(self):
         
         test_patterns = [
+            (6,1,13),
             (6,2,12),
+            (6,3,13),
+            (6,4,8),
+            (6,5,9),
+            (6,6,8)
         ]
 
         for n, a_1, expected_result in test_patterns:
