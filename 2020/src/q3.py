@@ -3,22 +3,6 @@ import cProfile
 from typing import List, Tuple
 from functools import lru_cache
 
-class SeatPair:
-    distance: int
-    half_distance: int
-    left_seat: int
-    right_seat: int
-
-    def __init__(self,left_seat,right_seat):
-        from math import ceil 
-        self.left_seat = left_seat
-        self.right_seat = right_seat
-        self.distance = left_seat - right_seat
-        self.half_distance = ceil(self.distance/2)
-
-    def tuplify(self):
-        return (self.half_distance,[self.left_seat, self.right_seat], self.distance)
-
 @lru_cache
 def main():
     from os import cpu_count
@@ -30,7 +14,7 @@ def main():
         data = [tuple(map(int,line.rstrip().split())) for line in stdin.readlines()]
 
     p:Pool = Pool(cpu_count())
-    solutions:List[str] = p.map(sum_even_seats,data)
+    solutions:List[str] = p.map(sum_even_seats, data)
 
     with open("q3_out.txt", "w", encoding = "utf_8") as file:
         file.writelines(solutions)
@@ -55,16 +39,16 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
 
         if left_seat <= 0:
             new_seat_ind = 1
-            heappush(seat_pairs, SeatPair(1, a_1).tuplify())
+            heappush(seat_pairs, get_seat_pair(1, a_1))
 
         elif right_seat >= n + 1:
              new_seat_ind = n
-             heappush(seat_pairs, SeatPair(a_1, n).tuplify())
+             heappush(seat_pairs, get_seat_pair(a_1, n))
 
         else:
             new_seat_ind = left_seat - farthest_seat_pair[0]
-            heappush(seat_pairs, SeatPair(left_seat, new_seat_ind).tuplify())
-            heappush(seat_pairs, SeatPair(new_seat_ind, right_seat).tuplify())
+            heappush(seat_pairs, get_seat_pair(left_seat, new_seat_ind))
+            heappush(seat_pairs, get_seat_pair(new_seat_ind, right_seat))
 
         if i % 2 == 0:
             seat_sum += new_seat_ind
@@ -77,10 +61,17 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
 def initialize_seat_heap(n:int, a_1:int) -> List[Tuple]:
     from heapq import heapify
     
-    seat_pairs: List[Tuple] = [SeatPair(2-a_1,a_1).tuplify(), SeatPair(a_1,2*n-a_1).tuplify()]
+    seat_pairs: List[Tuple] = [get_seat_pair(2-a_1,a_1), get_seat_pair(a_1,2*n-a_1)]
     heapify(seat_pairs)
 
     return seat_pairs
+
+@lru_cache
+def get_seat_pair(left_seat: int, right_seat: int) -> Tuple:
+    from math import ceil 
+
+    return (ceil((left_seat - right_seat)/2), [left_seat, right_seat], left_seat - right_seat)
+
 
 if __name__ == '__main__':
     main()
