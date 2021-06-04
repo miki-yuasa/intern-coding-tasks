@@ -1,7 +1,7 @@
 import cProfile
 from typing import List, Tuple
 
-class SeatNeighbor:
+class SeatPair:
     distance: int
     half_distance: int
     left_seat: int
@@ -42,17 +42,35 @@ def sum_even_seats(na_1: List[int]) -> str:
     a_1:int
     n, a_1 = na_1
 
+    seat_sum: int = 0
+
+
+    seat_pairs: List[Tuple] = initialize_seat_heap(n,a_1)
+
+    for i in range(n-1):
+        farthest_seat_pair = heapq.heappop(seat_pairs)
+
+        if farthest_seat_pair[1][1] == a_1:
+
+        elif farthest_seat_pair[1][0] == a_1:
+
+        else:
+            new_seat_ind:int = math.floor(sum(farthest_seat_pair[1])/2)
+            heapq.heappush(seat_pairs,SeatPair(farthest_seat_pair[1][0], new_seat_ind).tuplify())
+            heapq.heappush(seat_pairs,SeatPair(new_seat_ind, farthest_seat_pair[1][1]).tuplify())
+         
+    """
     seat_neighbors: List[int]
     closer_seats: Tuple
     seat_sum: int
 
     if np.floor(n/2) >= a_1:
-        seat_neighbors = [SeatNeighbor(a_1,n).tuplify()]
-        closer_seats = SeatNeighbor(1,a_1).tuplify()
+        seat_neighbors = [SeatPair(a_1,n).tuplify()]
+        closer_seats = SeatPair(1,a_1).tuplify()
         seat_sum = n
     else:
-        seat_neighbors = [SeatNeighbor(1,a_1).tuplify()]
-        closer_seats = SeatNeighbor(a_1,n).tuplify()
+        seat_neighbors = [SeatPair(1,a_1).tuplify()]
+        closer_seats = SeatPair(a_1,n).tuplify()
         seat_sum = 1
 
     closer_dist: int = closer_seats[0] - 1
@@ -77,8 +95,8 @@ def sum_even_seats(na_1: List[int]) -> str:
             pass
 
         new_seat_ind:int = math.floor(sum(farthest_seats[1])/2)
-        heapq.heappush(seat_neighbors,SeatNeighbor(farthest_seats[1][0], new_seat_ind).tuplify())
-        heapq.heappush(seat_neighbors,SeatNeighbor(new_seat_ind, farthest_seats[1][1]).tuplify())
+        heapq.heappush(seat_neighbors,SeatPair(farthest_seats[1][0], new_seat_ind).tuplify())
+        heapq.heappush(seat_neighbors,SeatPair(new_seat_ind, farthest_seats[1][1]).tuplify())
 
         if i % 2 == 1:
             seat_sum += new_seat_ind
@@ -89,33 +107,24 @@ def sum_even_seats(na_1: List[int]) -> str:
         farthest_seats = heapq.heappop(seat_neighbors)
 
         new_seat_ind:int = math.floor(sum(farthest_seats[1])/2)
-        heapq.heappush(seat_neighbors,SeatNeighbor(farthest_seats[1][0], new_seat_ind).tuplify())
-        heapq.heappush(seat_neighbors,SeatNeighbor(new_seat_ind, farthest_seats[1][1]).tuplify())
+        heapq.heappush(seat_neighbors,SeatPair(farthest_seats[1][0], new_seat_ind).tuplify())
+        heapq.heappush(seat_neighbors,SeatPair(new_seat_ind, farthest_seats[1][1]).tuplify())
 
         if i % 2 == 1:
             seat_sum += new_seat_ind
         else:
-            continue     
-    """
-    for i in range(np.ceil(n/2).astype('int')-1):
-        new_seat_ind: int = seats.argmax() + 1
-        new_seats: npt.ArrayLike = get_seats(n, new_seat_ind)
-        seats: npt.ArrayLike = np.minimum(seats, new_seats)
-
-        #seat_num, seats = get_seated(na_1, seats)
-        
-
-    empty_seats_inds: npt.ArrayLike = np.argwhere(seats==1) + 1
-
-    if np.ceil(n/2)%2 == 0:
-        seat_sum += np.sum(empty_seats_inds[1::2])
-    else:
-        seat_sum += np.sum(empty_seats_inds[::2])
+            continue
     """
     
     return '{:.0f}\n'.format(seat_sum)
 
-def initialize_seat_heap(n:int, a_i:int) -> List[Tuple]:
+def initialize_seat_heap(n:int, a_1:int) -> List[Tuple]:
+    import heapq
+    
+    seat_pairs: List[Tuple] = [SeatPair(2-a_1,a_1).tuplify(), SeatPair(a_1,2*n-a_1).tuplify()]
+    heapq.heapify(seat_pairs)
+
+    return seat_pairs
 
 
 def get_seated(n:int, a_i:int, seat_neighbors:List[Tuple[int]]):
@@ -124,8 +133,8 @@ def get_seated(n:int, a_i:int, seat_neighbors:List[Tuple[int]]):
 
     farthest_seats = heapq.heappop(seat_neighbors)
     seat_ind:int = math.floor(sum(farthest_seats[1])/2)
-    heapq.heappush(seat_neighbors,SeatNeighbor(farthest_seats[1][0], seat_ind).tuplify())
-    heapq.heappush(seat_neighbors,SeatNeighbor(seat_ind, farthest_seats[1][1]).tuplify())
+    heapq.heappush(seat_neighbors,SeatPair(farthest_seats[1][0], seat_ind).tuplify())
+    heapq.heappush(seat_neighbors,SeatPair(seat_ind, farthest_seats[1][1]).tuplify())
 
     return seat_ind, seat_neighbors
 
