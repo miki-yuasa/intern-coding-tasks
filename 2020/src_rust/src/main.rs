@@ -1,3 +1,5 @@
+mod q3;
+
 fn main() {
-    println!("Hello, world!");
+    q3::q3_sol();
 }
