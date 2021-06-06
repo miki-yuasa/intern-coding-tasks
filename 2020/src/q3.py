@@ -60,6 +60,8 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
 
     empty_seats_count:int = np.sum(empty_seats[1::2]) if ceiled_n_seats % 2 == 0 else np.sum(empty_seats[0::2])
 
+    print('Done',na_1)
+
     return '{:.0f}\n'.format(np.sum(sat_seats[1::2]) + empty_seats_count)
 
 
