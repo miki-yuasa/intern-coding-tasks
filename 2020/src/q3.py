@@ -6,6 +6,8 @@ from heapq import heapify, heappush, heapreplace
 from os import cpu_count
 from sys import stdin
 from multiprocessing import Pool
+from math import ceil
+import numpy as np
 
 
 @lru_cache
@@ -30,9 +32,11 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
 
     seat_pairs: List[Tuple] = initialize_seat_heap(n, a_1)
 
-    sitting_order: List[int] = []
+    sitting_order: List[int] = [a_1]
 
-    for i in range(n - 1):
+    ceiled_n_seats:int = ceil(n/2)
+
+    for i in range(ceiled_n_seats - 1):
         farthest_seat_pair = seat_pairs[0]
         left_seat: int = farthest_seat_pair[1][0]
         right_seat: int = farthest_seat_pair[1][1]
@@ -51,7 +55,12 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
             heapreplace(seat_pairs, get_seat_pair(left_seat, new_seat_ind))
             heappush(seat_pairs, get_seat_pair(new_seat_ind, right_seat))
 
-    return '{:.0f}\n'.format(sum(sitting_order[::2]))
+    sat_seats = np.array(sitting_order)
+    empty_seats = np.setdiff1d(np.array(range(1, n + 1)), sat_seats)
+
+    empty_seats_count:int = np.sum(empty_seats[1::2]) if ceiled_n_seats % 2 == 0 else np.sum(empty_seats[0::2])
+
+    return '{:.0f}\n'.format(np.sum(sat_seats[1::2]) + empty_seats_count)
 
 
 @lru_cache
