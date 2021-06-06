@@ -2,7 +2,7 @@ from __future__ import annotations
 import cProfile
 from typing import List, Tuple
 from functools import lru_cache
-from heapq import heappop, heapify, heappush
+from heapq import heapify, heappush, heapreplace
 from os import cpu_count
 from sys import stdin
 from multiprocessing import Pool
@@ -33,22 +33,22 @@ def sum_even_seats(na_1: Tuple[int]) -> str:
     sitting_order: List[int] = []
 
     for i in range(n - 1):
-        farthest_seat_pair = heappop(seat_pairs)
+        farthest_seat_pair = seat_pairs[0]
         left_seat: int = farthest_seat_pair[1][0]
         right_seat: int = farthest_seat_pair[1][1]
 
         if left_seat <= 0:
             sitting_order.append(1)
-            heappush(seat_pairs, get_seat_pair(1, a_1))
+            heapreplace(seat_pairs, get_seat_pair(1, a_1))
 
         elif right_seat >= n + 1:
             sitting_order.append(n)
-            heappush(seat_pairs, get_seat_pair(a_1, n))
+            heapreplace(seat_pairs, get_seat_pair(a_1, n))
 
         else:
             new_seat_ind: int = left_seat - farthest_seat_pair[0]
             sitting_order.append(new_seat_ind)
-            heappush(seat_pairs, get_seat_pair(left_seat, new_seat_ind))
+            heapreplace(seat_pairs, get_seat_pair(left_seat, new_seat_ind))
             heappush(seat_pairs, get_seat_pair(new_seat_ind, right_seat))
 
     return '{:.0f}\n'.format(sum(sitting_order[::2]))
